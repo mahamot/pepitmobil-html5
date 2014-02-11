@@ -18,3 +18,4 @@ Main programmer and founder
 
 Contributors
 ------------
+- Jérémie Bels <j.bels@yahoo.fr>
