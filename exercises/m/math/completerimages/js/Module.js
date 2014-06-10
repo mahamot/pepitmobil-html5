@@ -7,11 +7,65 @@ m.math.completerimages.Module = function (e) {
     this.buildExplanation = function (div, currentExercise) {
     };
 
-    this.buildQuestion = function (div, currentExercise, currentModule) {
+   /* this.buildQuestion = function (div, currentExercise, currentModule) {
         view = new m.math.completerimages.View(this, div);
         questionIndex = 1;
         currentScore = this.getQuestionScore(currentExercise, currentModule);
-    };
+    };*/
+
+     this.buildQuestion = function (div, currentExercise, currentModule) {
+         if (currentExercise == 1) {
+             if (currentModule == 1) {
+                 questionIndex = 1;
+
+               /*  var numfish;
+                 var nummum;
+                 var numhouse;
+                 var numhumpty;
+                 var saisi = true;
+                 var total1;
+                 var total2;
+                 random_number();
+
+                 do{
+
+                     total2 = number;
+                     numfish = Math.round(Math.random()*number);
+                     numhumpty = number-numfish;
+
+                 }while(!saisi);
+
+                 saisi = true;
+
+                 random_number();
+
+                 do{
+
+                     total1 = number;
+                     numhouse = Math.round(Math.random()*number);
+                     nummum = number-numhouse;
+
+                 }while(!saisi);*/
+
+                 //random_number();
+
+                 new m.math.completerimages.View(this, div,
+
+                     [
+                         'saisissez le nombre d\'image à gauche'
+                     ],
+                     [[ { type: 'fish', number: 10 },
+                         { type: 'humpty', number: 10 }
+                     ], [ { type: 'house', number: 10 },
+                         { type: 'mum', number: 10 }
+                     ]]);
+
+             }
+         }
+         questionIndex = 1;
+         currentScore = this.getQuestionScore(currentExercise, currentModule);
+
+     };
 
     this.error = function () {
         if (currentScore > 0) {
@@ -94,6 +148,14 @@ m.math.completerimages.Module = function (e) {
         }
     };
 
+    var get_number = function(){
+        return number;
+    }
+
+    var random_number = function(){
+        number = Math.round(Math.random()*20);
+    }
+
 // private methods
     var init = function (e) {
         engine = e;
@@ -102,6 +164,8 @@ m.math.completerimages.Module = function (e) {
 // private attributes
     var view;
     var engine;
+
+    var number;
 
     var questionIndex;
     var currentScore;

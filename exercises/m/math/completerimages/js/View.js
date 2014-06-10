@@ -1,13 +1,14 @@
-m.math.completerimages.View = function (mdl, div) {
+m.math.completerimages.View = function (mdl, div, i, s) {
 
 // public methods
     this.error = function () {
         module.error();
     };
 
-    this.init = function (mdl, view) {
+    this.init = function (mdl, view, i, s) {
         module = mdl;
-        model = new m.math.completerimages.Model();
+
+        model = new m.math.completerimages.Model(s);
         init_div(view);
         controller = new m.math.completerimages.Controller(model, this);
     };
@@ -24,24 +25,492 @@ m.math.completerimages.View = function (mdl, div) {
         }
     };
 
-// private methods
-    var init_div = function (view) {
-        var button;
+    //private methods
+    var build_operation = function (view,style) {
 
-        button = $('<a/>', {
+        if (style === "md_lg") {
+            var canvas_div = $('<div />', {
+                style: 'background-color: #fffed4; width: 75%; align: center',
+                id: 'canvas_id_md_lg'
+            });
+
+            var canvas = $('<canvas/>', {
+                class: 'visible-md visible-lg',
+                style: 'background-color: #fffed4;  padding-left: 0; padding-right: 0; margin-left: auto; margin-right: auto;display: block',
+                id: 'canvas_element_md_lg'
+            });
+
+            build_spacing().appendTo(canvas_div);
+            canvas.appendTo(canvas_div);
+            canvas_div.appendTo(view);
+
+            var js_canvas_div = document.getElementById("canvas_id_md_lg");
+            var js_canvas = document.getElementById("canvas_element_md_lg");
+
+            js_canvas.width = js_canvas_div.clientWidth;
+            js_canvas.height = js_canvas_div.clientWidth;
+
+            draw_shapes(canvas);
+
+        }
+
+// xs and sm devices
+        if (style === "xs_sm") {
+            var canvas_div = $('<div />', {
+                style: 'background-color: #fffed4; align: center',
+                id: 'canvas_id_xs_sm'
+            });
+
+            var canvas = $('<canvas/>', {
+                class: 'visible-xs visible-sm',
+                style: 'background-color: #fffed4; padding-left: 0; padding-right: 0; margin-left: auto; margin-right: auto;display: block',
+                id: 'canvas_element_xs_sm'
+            });
+
+            //build_spacing().appendTo(canvas_div);
+            canvas.appendTo(canvas_div);
+            canvas_div.appendTo(view);
+
+            var js_canvas_div = document.getElementById("canvas_id_xs_sm");
+            var js_canvas = document.getElementById("canvas_element_xs_sm");
+
+            js_canvas.width = js_canvas_div.clientWidth;
+            js_canvas.height = js_canvas_div.clientWidth;
+
+            draw_shapes(canvas);
+
+        }
+
+
+    };
+
+
+    var draw_shapes = function (canvas) {
+        var width = canvas.width();
+        var height = canvas.height();
+        var context = canvas[0].getContext("2d");
+
+        var images = model.getImgs();
+
+        console.log(images);
+
+        var img = new Image();
+
+
+        /*
+            reste a faire liste des src puis apres terminer sur la gestion bouton et hop tadaaaaa
+         */
+
+        var srcimg = model.getSrc();
+        console.log(srcimg);
+
+
+        if(images.length >0){
+            var image = images[0];
+                img.src = image.src;
+               // console.log('src'+img.src);
+                img.onload = function(){
+
+                    alert('ici');
+
+                    context.lineWidth = 1.;
+                    context.strokeStyle = "#000000";
+                    context.fillStyle = "#ffffff";
+                   /* context.rect(0, 0, width, height);
+                    context.fill();
+                    context.stroke();*/
+
+                    context.beginPath();
+
+
+                    //console.log('length '+images.length);
+                    for(var i =0;i<images.length;i++){
+                        var image = images[i];
+                        if (image.type === 'fish') {
+
+                            var imgwidth = image.width;
+                            var imgheight = image.height;
+                         /*   if(imgwidth<0.1){
+                                imgwidth=imgwidth+0.1;
+                            }
+                            if(imgheight<0.1){
+                                imgheight=imgheight+0.1;
+                            }*/
+
+                            context.drawImage(img,image.x*width , image.y*height , imgwidth * width,imgheight * height);
+                        }
+                        //alert('ici');
+                    }
+
+                    context.stroke();
+                    context.fill();
+                    context.closePath();
+                }
+
+            var img2 = new Image();
+
+            image = images[images.length-1];
+            img2.src = image.src;
+            img2.onload = function(){
+                alert('la');
+
+                context.lineWidth = 1.;
+                context.strokeStyle = "#000000";
+                context.fillStyle = "#ffffff";
+                /*context.rect(0, 0, width, height);
+                context.fill();
+                context.stroke();*/
+
+                context.beginPath();
+
+
+                //console.log('length '+images.length);
+                for(var i =0;i<images.length;i++){
+                    var image = images[i];
+
+                    if (image.type === 'humpty') {
+                        var imgwidth = image.width;
+                        var imgheight = image.height;
+                       /* if(imgwidth<0.1){
+                            imgwidth=imgwidth+0.1;
+                        }
+                        if(imgheight<0.1){
+                            imgheight=imgheight+0.1;
+                        }*/
+
+                        context.drawImage(img2,image.x*width , image.y*height , imgwidth * width, imgheight * height);
+                    }
+                    //alert('ici');
+                }
+
+                context.stroke();
+                context.fill();
+                context.closePath();
+            }
+            console.log(img);
+            console.log(img2);
+        }
+    };
+
+
+
+
+
+    var get_image = function(dx,dy,dw,dh){
+        return {x:dx,
+            y:dy,
+            w:dw,
+            h:dh,
+            center_x: dx + dw / 2,
+            center_y: dy + dh / 2,
+            radius: (dw / 2 ) * Math.sqrt(2)};
+    }
+
+
+    var control_collision = function (){
+
+        var length = list.length -1;
+        var ok = true;
+        var i = 0;
+
+        var center_x = list[length].center_x;
+        var center_y = list[length].center_y;
+        var radiusList = list[length].radius;
+
+        while (ok && i < length) {
+
+            var dx = Math.abs(list[i].center_x - center_x);
+            var dy = Math.abs(list[i].center_y - center_y);
+            var radius = list[i].radius + radiusList;
+
+            /*
+             console.log('i '+i);
+
+             console.log('length '+length);
+
+             console.log('x '+list[length].x);
+             console.log('y '+list[length].y);
+
+             console.log('x0 '+list[0].x);
+             console.log('y0 '+list[0].y);
+
+             console.log('dx '+dx);
+             console.log('dy '+dy);
+             console.log('radius '+radius);
+             console.log('   ');
+             console.log('math '+Math.sqrt(dx * dx + dy * dy));
+             console.log('bool '+(Math.sqrt(dx * dx + dy * dy) < radius));
+             console.log('   ');*/
+
+
+            /* if (Math.sqrt(dx * dx + dy * dy) < radius) {
+             //alert("ici");
+
+             ok = false;
+             break;
+             } else {
+             ++i;
+             }*/
+            i++;
+        }
+
+        return ok;
+    };
+
+
+    /* fonction permettant la construction de la serie de bouton (verticalement ou horizontalement)*/
+    var build_number = function(div,vertical,style){
+
+        //probleme d affichage xs_sm et md_lg
+        var button;
+        var i =21;
+        var class_size ='md';
+        var class_style ='lg';
+        var buttonvalid = $('<a/>', {
             href: '#',
             class: 'btn btn-lg btn-warning active',
             id: 'valid',
             role: 'button',
-            html: 'valid'
+            style: 'margin:auto;',
+            html: 'valider'
         });
-        button.appendTo(div);
+        var num; // = 7-i/3
+        var button;
+
+        if(style== 'xs_sm'){
+            class_size ='xs';
+            class_style ='sm';
+        }
+        var row_number;
+        for(i;i>0;i--){
+
+            if (vertical){
+
+                if(i%3 == 0){
+
+                    num = 7-i/3;
+
+                    row_number =  $('<div/>', {
+                        class: 'row-'+class_size+'-'+num+' visible-'+class_size+' visible-'+class_style,
+                        id: 'row_id_'+style
+                    });
+
+                    row_number.appendTo(div);
+
+                }
+            }else{
+                if(i == 21){
+
+                    row_number =  $('<div/>', {
+                        class: 'row-'+class_size+'-'+'0 visible-'+class_size+' visible-'+class_style,
+                        id: 'row_id_'+style
+                    });
+                    row_number.appendTo(div);
+                }
+                if(i == 11){
+                   // num = 1;
+
+                    row_number =  $('<div/>', {
+                        class: 'row-'+class_size+'-'+'1 visible-'+class_size+' visible-'+class_style,
+                        id: 'row_id_'+style
+                    });
+                    row_number.appendTo(div);
+                }
+                if(i == 1){
+                    // num = 1;
+
+                    row_number =  $('<div/>', {
+                        class: 'row-'+class_size+'-'+'2 visible-'+class_size+' visible-'+class_style,
+                        id: 'row_id_'+style
+                    });
+                    row_number.appendTo(div);
+                }
+
+
+            }
+            button = i-1;
+            button = $('<a/>', {
+                href: '#',
+                class: 'btn btn-lg btn-primary active',
+                id: 'button_'+button+'_'+style,
+                style: 'height:50px;width:60px;',
+                role: 'button',
+                html: button
+            });
+
+
+            button.appendTo(row_number);
+
+        }
+
+        /* rajout d'une ligne supplémentaire pour le bouton valid*/
+        if(vertical){
+            row_number =  $('<div/>', {
+                class: 'row-'+class_size+'-7 visible-'+class_size+' visible-'+class_style,
+                id: 'row_id_'+style
+            });
+            row_number.appendTo(div);
+
+            buttonvalid.appendTo(row_number);
+
+            col_number = $('<div/>', {
+                class: 'col-'+class_size+'-3 visible-'+class_size+' visible-'+class_style,
+                id: 'col_id_'+style
+            });
+
+            col_number.appendTo(row_number);
+        }else{
+            row_number =  $('<div/>', {
+                class: 'row-'+class_size+'-3 visible-'+class_size+' visible-'+class_style,
+                id: 'row_id_'+style
+            });
+
+            buttonvalid.appendTo(row_number);
+            row_number.appendTo(div);
+        }
+
+    }
+
+    var build_spacing = function () {
+        return $('<div/>', {
+            style: 'padding: 10px;'
+        });
     };
 
+    var init_div = function (view) {
+
+        view.css({
+            'background-color': '#9D9900',
+            'padding': '10px'
+        });
+        view.addClass('row');
+
+        // md and lg devices
+        var canvas_div_md_lg = $('<div/>', {
+            class: 'col-md-9 visible-md visible-lg',
+            style: 'background-color: #fffed4;'
+        });
+        var number_div_md_lg = $('<div/>', {
+            class: 'col-md-3 visible-md visible-lg',
+            id : 'number_md_lg'
+        });
+
+        canvas_div_md_lg.appendTo(view);
+        number_div_md_lg.appendTo(view);
+        build_operation(canvas_div_md_lg, "md_lg");
+        build_number(number_div_md_lg, true, "md_lg");
+
+
+// xs and sm devices
+        var global_div = $('<div/>', {
+            class: 'col-xs-12 visible-xs visible-sm',
+            id : 'global_div_xs_sm'
+        });
+        var canvas_div_xs_sm = $('<div/>', {
+            style: 'background-color: #fffed4;'
+        });
+        var number_div_xs_sm = $('<div/>', {
+            id : 'number_xs_sm'
+        });
+
+        canvas_div_xs_sm.appendTo(global_div);
+        build_spacing().appendTo(global_div);
+        number_div_xs_sm.appendTo(global_div);
+        global_div.appendTo(view);
+        build_operation(canvas_div_xs_sm, "xs_sm");
+        build_number(number_div_xs_sm, false, "xs_sm");
+
+    };
+
+    /*
+     var build_operation = function (view,style) {
+
+     //premiere etape division de l'ecran
+
+
+     box_div.appendTo(view);
+     number_div.appendTo(view);
+
+     //build_spacing().appendTo(canvas);
+     canvas.appendTo(box_div);
+     box_div.appendTo(div);
+     build_number(number_div,style);
+     number_div.appendTo(div);
+
+     var js_canvas_div = document.getElementById('box_id_'+style);
+     var js_canvas = document.getElementById("canvas_element");
+
+     //les variable intermediaire permette de modifier la taille du canvas
+     js_canvas.width = js_canvas_div.clientWidth * 0.95;
+     js_canvas.height = js_canvas_div.clientWidth * 0.8;
+
+
+     //partie ajout de dessin
+     var width = js_canvas.width;
+     var height = js_canvas.height;
+     var context = canvas[0].getContext("2d");
+
+     var nbRandom = Math.round(Math.random() * (20)); // nombre aleatoire d image va etre placé cote model
+
+     var x;
+     var y;
+
+     var img = new Image();
+     img.src = 'exercises/m/math/completerimages/img/house-1.png';
+
+     nbRandom = 10;
+
+     img.onload = function(){
+     //on boucle sur le nombre d'image aléatoire
+     for (var i = 0; i < nbRandom; ++i) {
+
+     //width = width * (Math.random() * 0.50 + Math.random() *  -0.50 + 1);
+     //height = height * (Math.random() * 0.50 + Math.random() *  -0.50 + 1);
+
+     do{
+
+     //coordonées aléatoirement pris dans le canvas
+
+     x = Math.random()*width;
+     y = Math.random()*height;
+
+     //si on est hors cadre sur x on met casi au max dans la zone x
+     if(x+img.width> js_canvas.width){
+     x = js_canvas.width-img.width - 0.1;
+     }
+     //meme chose pour la hauteur
+     if(y+img.height> js_canvas.height){
+     y = js_canvas.height-img.height -0.1;
+     }
+
+     image = get_image(x,y,img.width,img.height);
+     list[i]= image;
+
+     }while(!control_collision());
+
+
+
+     context.drawImage(img,x,y);
+     }
+     }
+
+     };
+
+     */
+
+
+
+
+
+
 // private attributes
+    var image;
+    var list = [];
+
+
     var module;
     var model;
     var controller;
 
-    this.init(mdl, div);
+    this.init(mdl, div, i, s);
 };
