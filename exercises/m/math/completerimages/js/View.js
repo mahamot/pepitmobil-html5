@@ -20,6 +20,8 @@ m.math.completerimages.View = function (mdl, div, i, s) {
     };
 
     this.update = function () {
+        draw_images($('#canvas_element_md_lg'));
+        draw_images($('#canvas_element_xs_sm'));
         if (model.isOkResult()) {
             module.next();
         }
@@ -50,7 +52,7 @@ m.math.completerimages.View = function (mdl, div, i, s) {
             js_canvas.width = js_canvas_div.clientWidth;
             js_canvas.height = js_canvas_div.clientWidth;
 
-            draw_shapes(canvas);
+            draw_images(canvas);
 
         }
 
@@ -77,7 +79,7 @@ m.math.completerimages.View = function (mdl, div, i, s) {
             js_canvas.width = js_canvas_div.clientWidth;
             js_canvas.height = js_canvas_div.clientWidth;
 
-            draw_shapes(canvas);
+            draw_images(canvas);
 
         }
 
@@ -85,110 +87,67 @@ m.math.completerimages.View = function (mdl, div, i, s) {
     };
 
 
-    var draw_shapes = function (canvas) {
-        var width = canvas.width();
-        var height = canvas.height();
-        var context = canvas[0].getContext("2d");
-
-        var images = model.getImgs();
-
-        console.log(images);
+    var load_images = function(src,images,context,width,height){
 
         var img = new Image();
+        img.src = src;
 
+        img.onload = function(){
 
-        /*
-            reste a faire liste des src puis apres terminer sur la gestion bouton et hop tadaaaaa
-         */
+            context.beginPath();
 
-        var srcimg = model.getSrc();
-        console.log(srcimg);
+            for(var i =0;i<images.length;i++){
+                var image = images[i];
+                if (image.src === src) {
 
-
-        if(images.length >0){
-            var image = images[0];
-                img.src = image.src;
-               // console.log('src'+img.src);
-                img.onload = function(){
-
-                    alert('ici');
-
-                    context.lineWidth = 1.;
-                    context.strokeStyle = "#000000";
-                    context.fillStyle = "#ffffff";
-                   /* context.rect(0, 0, width, height);
-                    context.fill();
-                    context.stroke();*/
-
-                    context.beginPath();
-
-
-                    //console.log('length '+images.length);
-                    for(var i =0;i<images.length;i++){
-                        var image = images[i];
-                        if (image.type === 'fish') {
-
-                            var imgwidth = image.width;
-                            var imgheight = image.height;
-                         /*   if(imgwidth<0.1){
-                                imgwidth=imgwidth+0.1;
-                            }
-                            if(imgheight<0.1){
-                                imgheight=imgheight+0.1;
-                            }*/
-
-                            context.drawImage(img,image.x*width , image.y*height , imgwidth * width,imgheight * height);
-                        }
-                        //alert('ici');
+                    var imgwidth = image.width;
+                    var imgheight = image.height;
+                    if(imgwidth<0.1){
+                         imgwidth=imgwidth+0.1;
+                    }
+                    if(imgheight<0.1){
+                         imgheight=imgheight+0.1;
                     }
 
-                    context.stroke();
-                    context.fill();
-                    context.closePath();
+                    context.drawImage(img,image.x*width , image.y*height , imgwidth * width,imgheight * height);
                 }
 
-            var img2 = new Image();
-
-            image = images[images.length-1];
-            img2.src = image.src;
-            img2.onload = function(){
-                alert('la');
-
-                context.lineWidth = 1.;
-                context.strokeStyle = "#000000";
-                context.fillStyle = "#ffffff";
-                /*context.rect(0, 0, width, height);
-                context.fill();
-                context.stroke();*/
-
-                context.beginPath();
-
-
-                //console.log('length '+images.length);
-                for(var i =0;i<images.length;i++){
-                    var image = images[i];
-
-                    if (image.type === 'humpty') {
-                        var imgwidth = image.width;
-                        var imgheight = image.height;
-                       /* if(imgwidth<0.1){
-                            imgwidth=imgwidth+0.1;
-                        }
-                        if(imgheight<0.1){
-                            imgheight=imgheight+0.1;
-                        }*/
-
-                        context.drawImage(img2,image.x*width , image.y*height , imgwidth * width, imgheight * height);
-                    }
-                    //alert('ici');
-                }
 
                 context.stroke();
                 context.fill();
                 context.closePath();
             }
-            console.log(img);
-            console.log(img2);
+
+        }
+    }
+    
+
+
+    var draw_images = function (canvas) {
+        var width = canvas.width();
+        var height = canvas.height();
+        var context = canvas[0].getContext("2d");
+
+        /* dessin d un cadre fond blanc pour les images */
+        context.lineWidth = 1.;
+        context.strokeStyle = "#000000";
+        context.fillStyle = "#ffffff";
+        context.rect(0, 0, width, height);
+        context.fill();
+        context.stroke();
+
+        var images = model.getImgs();
+
+        var srcimg = model.getSrc();
+
+        if(images.length >0){
+
+            for(var k = 0;k< srcimg.length;k++){
+
+               load_images(srcimg[k],images,context,width,height);
+
+            }
+
         }
     };
 
@@ -206,58 +165,6 @@ m.math.completerimages.View = function (mdl, div, i, s) {
             radius: (dw / 2 ) * Math.sqrt(2)};
     }
 
-
-    var control_collision = function (){
-
-        var length = list.length -1;
-        var ok = true;
-        var i = 0;
-
-        var center_x = list[length].center_x;
-        var center_y = list[length].center_y;
-        var radiusList = list[length].radius;
-
-        while (ok && i < length) {
-
-            var dx = Math.abs(list[i].center_x - center_x);
-            var dy = Math.abs(list[i].center_y - center_y);
-            var radius = list[i].radius + radiusList;
-
-            /*
-             console.log('i '+i);
-
-             console.log('length '+length);
-
-             console.log('x '+list[length].x);
-             console.log('y '+list[length].y);
-
-             console.log('x0 '+list[0].x);
-             console.log('y0 '+list[0].y);
-
-             console.log('dx '+dx);
-             console.log('dy '+dy);
-             console.log('radius '+radius);
-             console.log('   ');
-             console.log('math '+Math.sqrt(dx * dx + dy * dy));
-             console.log('bool '+(Math.sqrt(dx * dx + dy * dy) < radius));
-             console.log('   ');*/
-
-
-            /* if (Math.sqrt(dx * dx + dy * dy) < radius) {
-             //alert("ici");
-
-             ok = false;
-             break;
-             } else {
-             ++i;
-             }*/
-            i++;
-        }
-
-        return ok;
-    };
-
-
     /* fonction permettant la construction de la serie de bouton (verticalement ou horizontalement)*/
     var build_number = function(div,vertical,style){
 
@@ -268,7 +175,7 @@ m.math.completerimages.View = function (mdl, div, i, s) {
         var class_style ='lg';
         var buttonvalid = $('<a/>', {
             href: '#',
-            class: 'btn btn-lg btn-warning active',
+            class: 'btn btn-lg btn-warning',
             id: 'valid',
             role: 'button',
             style: 'margin:auto;',
@@ -331,7 +238,7 @@ m.math.completerimages.View = function (mdl, div, i, s) {
             button = i-1;
             button = $('<a/>', {
                 href: '#',
-                class: 'btn btn-lg btn-primary active',
+                class: 'btn btn-lg btn-primary',
                 id: 'button_'+button+'_'+style,
                 style: 'height:50px;width:60px;',
                 role: 'button',

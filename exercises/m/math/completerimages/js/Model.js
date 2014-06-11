@@ -1,9 +1,11 @@
 m.math.completerimages.Model = function (s) {
 
 // public methods
-    this.check = function() {
+    this.check = function(value) {
+
+
         okResult = true;
-        return true;
+        return okResult;
     };
 
     this.isOkResult = function() {
@@ -18,27 +20,70 @@ m.math.completerimages.Model = function (s) {
     this.reset = function() {
     };
 
+
+
+    /*generation des nombres aleatoire */
+    var getRandomNumber = function(){
+
+        var numberAlea = Math.round(Math.random()*20);
+        numimg1 = Math.round(Math.random()*numberAlea);
+        numimg2 = numberAlea - numimg1;
+    };
+
+
+
+
     var generateImgs = function () {
 
-        /*
-        * voir pour regler les img et imgs pour l affichage des images
-        */
+        getRandomNumber();
+
+        var typesrc =[];
+        var total=[];
 
         for (var i = 0; i < imgNumbers.length; ++i) {
             imgs.push([]);
+            src.push([]);
+            total.push([]);
+
+            /* terminer le cote score total */
             for (var j = 0; j < imgNumbers[i].length; ++j) {
-                for (var k = 0; k < imgNumbers[i][j].number; ++k) {
+
+                var number = numimg1;
+
+                if(j==1){
+                    number = numimg2;
+                    getRandomNumber();
+                }
+                total[j] =  numimg1+numimg2;
+                imgNumbers[i][j].number = number;
+
+
+
+                for (var k = 0; k < number; ++k) {
                     var img;
-                    //console.log(imgNumbers);
+
                     do {
                         img = generateImg(imgNumbers[i][j].type);
                     } while (!valid_img(img, imgs[i]));
-                    src[i]=imgNumbers[i][j].type;
+
                     imgs[i].push(img);
+
+
+
+                    if(typesrc.length ==0 || typesrc[k-1] != img.src){
+                        src[i].push(img.src);
+                    }
+                    typesrc[k]= img.src;
+
                 }
+
             }
+
+
         }
 
+
+        //console.log(total);
     };
 
 
@@ -47,8 +92,12 @@ m.math.completerimages.Model = function (s) {
     };
 
     this.getSrc = function(){
-        return src;
+        return src[index];
     };
+
+    this.getResult = function(){
+        return total[index];
+    }
 
 
     var generateImg = function (type) {
@@ -180,6 +229,11 @@ m.math.completerimages.Model = function (s) {
 // private attributes
     var imgNumbers = s;
     var okResult;
+
+    var numimg1 = 0;
+    var numimg2 = 0;
+
+    var total = [];
 
     var index;
     var imgs = [];
