@@ -2,16 +2,20 @@ m.math.completerimages.Controller = function (m, v) {
 
 // private methods
     var init = function () {
+
         $('#valid').on('click', function (e) {
             var e = e || window.event;
             var target = e.target || e.srcElement;
 
-            if (model.check()) {
-                view.update();
-            } else {
-                view.error();
+            if(buttonvalue!=21){
+                if (model.check(buttonvalue)) {
+                    view.update();
+                } else {
+                    view.error();
+                }
             }
         });
+
         init_blue_button('md_lg');
         init_blue_button('xs_sm');
     };
@@ -30,7 +34,6 @@ m.math.completerimages.Controller = function (m, v) {
 
     var blue_button_click = function(e,style){
 
-        console.log($(this));
         var e = e || window.event;
         var target = e.target || e.srcElement;
 

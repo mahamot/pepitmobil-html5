@@ -7,13 +7,7 @@ m.math.completerimages.Module = function (e) {
     this.buildExplanation = function (div, currentExercise) {
     };
 
-   /* this.buildQuestion = function (div, currentExercise, currentModule) {
-        view = new m.math.completerimages.View(this, div);
-        questionIndex = 1;
-        currentScore = this.getQuestionScore(currentExercise, currentModule);
-    };*/
-
-     this.buildQuestion = function (div, currentExercise, currentModule) {
+    this.buildQuestion = function (div, currentExercise, currentModule) {
          if (currentExercise == 1) {
              if (currentModule == 1) {
                  questionIndex = 1;
@@ -34,7 +28,7 @@ m.math.completerimages.Module = function (e) {
          questionIndex = 1;
          currentScore = this.getQuestionScore(currentExercise, currentModule);
 
-     };
+    };
 
     this.error = function () {
         if (currentScore > 0) {

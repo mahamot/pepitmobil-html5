@@ -1,10 +1,6 @@
 m.math.completerimages.View = function (mdl, div, i, s) {
 
 // public methods
-    this.error = function () {
-        module.error();
-    };
-
     this.init = function (mdl, view, i, s) {
         module = mdl;
 
@@ -17,6 +13,10 @@ m.math.completerimages.View = function (mdl, div, i, s) {
         model.next();
 
         this.update();
+    };
+
+    this.error = function () {
+        module.error();
     };
 
     this.update = function () {
@@ -329,91 +329,9 @@ m.math.completerimages.View = function (mdl, div, i, s) {
 
     };
 
-    /*
-     var build_operation = function (view,style) {
-
-     //premiere etape division de l'ecran
-
-
-     box_div.appendTo(view);
-     number_div.appendTo(view);
-
-     //build_spacing().appendTo(canvas);
-     canvas.appendTo(box_div);
-     box_div.appendTo(div);
-     build_number(number_div,style);
-     number_div.appendTo(div);
-
-     var js_canvas_div = document.getElementById('box_id_'+style);
-     var js_canvas = document.getElementById("canvas_element");
-
-     //les variable intermediaire permette de modifier la taille du canvas
-     js_canvas.width = js_canvas_div.clientWidth * 0.95;
-     js_canvas.height = js_canvas_div.clientWidth * 0.8;
-
-
-     //partie ajout de dessin
-     var width = js_canvas.width;
-     var height = js_canvas.height;
-     var context = canvas[0].getContext("2d");
-
-     var nbRandom = Math.round(Math.random() * (20)); // nombre aleatoire d image va etre placé cote model
-
-     var x;
-     var y;
-
-     var img = new Image();
-     img.src = 'exercises/m/math/completerimages/img/house-1.png';
-
-     nbRandom = 10;
-
-     img.onload = function(){
-     //on boucle sur le nombre d'image aléatoire
-     for (var i = 0; i < nbRandom; ++i) {
-
-     //width = width * (Math.random() * 0.50 + Math.random() *  -0.50 + 1);
-     //height = height * (Math.random() * 0.50 + Math.random() *  -0.50 + 1);
-
-     do{
-
-     //coordonées aléatoirement pris dans le canvas
-
-     x = Math.random()*width;
-     y = Math.random()*height;
-
-     //si on est hors cadre sur x on met casi au max dans la zone x
-     if(x+img.width> js_canvas.width){
-     x = js_canvas.width-img.width - 0.1;
-     }
-     //meme chose pour la hauteur
-     if(y+img.height> js_canvas.height){
-     y = js_canvas.height-img.height -0.1;
-     }
-
-     image = get_image(x,y,img.width,img.height);
-     list[i]= image;
-
-     }while(!control_collision());
-
-
-
-     context.drawImage(img,x,y);
-     }
-     }
-
-     };
-
-     */
-
-
-
-
-
-
 // private attributes
     var image;
     var list = [];
-
 
     var module;
     var model;

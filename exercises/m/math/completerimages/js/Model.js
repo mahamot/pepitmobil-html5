@@ -3,8 +3,10 @@ m.math.completerimages.Model = function (s) {
 // public methods
     this.check = function(value) {
 
-
-        okResult = true;
+        okResult = false;
+        if(this.getResult() == value){
+            okResult = true;
+        }
         return okResult;
     };
 
@@ -13,7 +15,7 @@ m.math.completerimages.Model = function (s) {
     };
 
     this.next = function() {
-        index =0;
+        ++index;
         okResult = false;
     };
 
@@ -35,15 +37,17 @@ m.math.completerimages.Model = function (s) {
 
     var generateImgs = function () {
 
-        getRandomNumber();
+
 
         var typesrc =[];
-        var total=[];
+
 
         for (var i = 0; i < imgNumbers.length; ++i) {
             imgs.push([]);
             src.push([]);
             total.push([]);
+
+            getRandomNumber();
 
             /* terminer le cote score total */
             for (var j = 0; j < imgNumbers[i].length; ++j) {
@@ -52,9 +56,8 @@ m.math.completerimages.Model = function (s) {
 
                 if(j==1){
                     number = numimg2;
-                    getRandomNumber();
                 }
-                total[j] =  numimg1+numimg2;
+
                 imgNumbers[i][j].number = number;
 
 
@@ -79,11 +82,11 @@ m.math.completerimages.Model = function (s) {
 
             }
 
+            total[i] =  numimg1+numimg2;
 
         }
 
 
-        //console.log(total);
     };
 
 
