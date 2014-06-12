@@ -120,7 +120,6 @@ m.math.completerimages.View = function (mdl, div, i, s) {
 
         }
     }
-    
 
 
     var draw_images = function (canvas) {
@@ -151,19 +150,6 @@ m.math.completerimages.View = function (mdl, div, i, s) {
         }
     };
 
-
-
-
-
-    var get_image = function(dx,dy,dw,dh){
-        return {x:dx,
-            y:dy,
-            w:dw,
-            h:dh,
-            center_x: dx + dw / 2,
-            center_y: dy + dh / 2,
-            radius: (dw / 2 ) * Math.sqrt(2)};
-    }
 
     /* fonction permettant la construction de la serie de bouton (verticalement ou horizontalement)*/
     var build_number = function(div,vertical,style){

@@ -236,10 +236,9 @@ m.math.completerimages.Model = function (s) {
     var numimg1 = 0;
     var numimg2 = 0;
 
-    var total = [];
-
     var index;
     var imgs = [];
     var src = [];
+    var total = [];
     init();
 };

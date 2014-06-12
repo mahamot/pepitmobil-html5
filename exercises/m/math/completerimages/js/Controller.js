@@ -7,7 +7,7 @@ m.math.completerimages.Controller = function (m, v) {
             var e = e || window.event;
             var target = e.target || e.srcElement;
 
-            if(buttonvalue!=21){
+            if(buttonpressed){
                 if (model.check(buttonvalue)) {
                     view.update();
                 } else {
